@@ -1,25 +1,27 @@
-// App.js
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import axios from 'axios';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import CategoriesList from './CategoriesList';
-import SousCategoriesList from './SousCategoriesList';
-import ProductsList from './ProductsList';
-import ProductDetailList from './ProductDetailList';
-
-const Stack = createStackNavigator();
-
-const App = () => {
+export default function App() {
+  const [data, setData] = useState([])
+  useEffect(() => {axios.get('https://127.0.0.1:8000/api/categories')
+    .then((res) => setData(res.data))
+    .catch((e) => console.log(e.message))
+  },[])
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Categories">
-        <Stack.Screen name="Categories" component={CategoriesList} />
-        <Stack.Screen name="Produits" component={ProductsList} />
-        {/* <Stack.Screen name="ProductDetail" component={ProductDetailList} /> */}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={styles.container}>
+      {data.map((d,k) => (
+        <Text key={k}>{d.nomcat}</Text>
+      ))}
+    </View>
   );
-};
+}
 
-export default App;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
